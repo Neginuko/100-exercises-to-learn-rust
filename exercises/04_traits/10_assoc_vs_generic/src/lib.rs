@@ -18,29 +18,30 @@ pub trait Power<Exponent = Self> {
     fn power(&self, n: Exponent) -> Self::Output;
 }
 
-impl Power<u16> for u32 {
-    type Output = u32;
-
-    fn power(&self, n: u16) -> Self::Output {
-        self.pow(n.into())
-    }
+macro_rules! impl_power {
+    ($base:ty, &$exponent:ty) => {
+        impl Power<&$exponent> for $base {
+            type Output = $base;
+        
+            fn power(&self, n: &$exponent) -> Self::Output {
+                self.pow((*n).into())
+            }
+        }
+    };
+    ($base:ty, $exponent:ty) => {
+        impl Power<$exponent> for $base {
+            type Output = $base;
+        
+            fn power(&self, n: $exponent) -> Self::Output {
+                self.pow(n.into())
+            }
+        }
+    };
 }
 
-impl Power<u32> for u32 {
-    type Output = u32;
-
-    fn power(&self, n: u32) -> Self::Output {
-        self.pow(n.into())
-    }
-}
-
-impl Power<&u32> for u32 {
-    type Output = u32;
-
-    fn power(&self, n: &u32) -> Self::Output {
-        self.pow((*n).into())
-    }
-}
+impl_power!(u32, u16);
+impl_power!(u32, u32);
+impl_power!(u32, &u32);
 
 #[cfg(test)]
 mod tests {
