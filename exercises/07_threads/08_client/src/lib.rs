@@ -8,7 +8,6 @@ pub mod store;
 #[derive(Clone)]
 // TODO: flesh out the client implementation.
 pub struct TicketStoreClient {
-    store: TicketStore,
     sender: Sender<Command>,
 }
 
@@ -42,7 +41,6 @@ pub fn launch() -> TicketStoreClient {
     std::thread::spawn(move || server(receiver));
 
     TicketStoreClient {
-        store: TicketStore::new(),
         sender,
     }
 }
